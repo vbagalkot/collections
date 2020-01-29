@@ -1,0 +1,36 @@
+#Kabanero! on activate substitute CollectionId for text 'CollectionId'
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: CollectionId-test-task
+spec:
+  inputs:
+    resources:
+      - name: git-source
+        type: git
+  outputs:
+    resources:
+      - name: docker-image
+        type: image
+  steps:
+    - name: test-echo
+      image: kabanero/nodejs-express:0.2
+      workingDir: ${inputs.resources.git-source.path}
+      command:
+        - /bin/bash
+      args:
+        - -c
+        - |
+          set -e
+          echo "APPSODY_INSTALL:"
+          echo $APPSODY_INSTALL
+          echo "APPSODY_TEST:"
+          echo $APPSODY_TEST
+          echo "APPSODY_WATCH_DIR:"
+          echo $APPSODY_WATCH_DIR
+          echo "------"
+          echo "My working directory is:"
+          pwd
+          ls
+          echo "------"
+          echo "I built my first Kabanero based Tekton task"
